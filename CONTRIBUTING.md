@@ -37,6 +37,19 @@ Blocked by #N / none
 Pointers to the relevant docs, pitfalls, and decisions already made.
 ```
 
+## Setup
+
+After `uv sync`, install the git hooks once per clone:
+
+```bash
+uv run pre-commit install
+```
+
+The hooks run ruff and `scripts/check_no_data.py`, which rejects anything under
+`assets/`, `data/` or `runs/`, any PDF, and raster images outside
+`tests/fixtures/` and `docs/img/` (or over 200 KB anywhere). CI runs the same
+check on every tracked file.
+
 ## Workflow
 
 1. **Plan before implementing.** Plan the milestone and each of its issues,

@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked --no-group gpu  # no GPU in CI; skip the CUDA stack
 
+      - name: No copyrighted data in the repo
+        run: uv run python scripts/check_no_data.py --all
+
       - name: Ruff lint
         run: uv run ruff check .
 

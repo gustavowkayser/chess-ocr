@@ -12,6 +12,7 @@ chess-ocr = "chess_ocr.cli:main"
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.7.0",
     "pytest>=8",
     "ruff>=0.8",
 ]
