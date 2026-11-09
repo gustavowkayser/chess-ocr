@@ -55,7 +55,8 @@ any task by reading its issue and the issue's milestone description.
 
 ## Conventions
 
-- Branch name: `<issue-number>-<slug>`. The PR body contains `Closes #N`.
+- One branch per milestone (`m<N>-<slug>`), one commit per issue, and one PR
+  at the end of the milestone with a `Closes #N` line for each issue.
 - Type-hinted Python and small modules. Keep pytest tests CPU-only and fast.
   GPU tests are marked `@pytest.mark.gpu` and skipped in CI.
 - Generated artefacts go to `data/` (datasets) or `runs/` (checkpoints,
