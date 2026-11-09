@@ -1,0 +1,19 @@
+# Local hooks only: ruff runs from the project's locked version via uv.
+# Install with: uv run pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: check-no-data
+        name: no copyrighted data (assets/, data/, runs/, PDFs, images)
+        entry: uv run python scripts/check_no_data.py
+        language: system
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --force-exclude
+        language: system
+        types_or: [python, pyi]
+      - id: ruff-format
+        name: ruff format --check
+        entry: uv run ruff format --check --force-exclude
+        language: system
+        types_or: [python, pyi]

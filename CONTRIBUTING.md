@@ -6,7 +6,7 @@
 - **Milestones:** one per stage, each with a goal and exit criteria in its
   GitHub description. Work on them in order. A milestone is closed when its
   exit criteria are met.
-- **Issues:** one deliverable each, small enough for one PR. Every issue
+- **Issues:** one deliverable each, small enough for one commit. Every issue
   belongs to a milestone and has exactly one `area:*` label.
 
 | Label | Scope |
@@ -37,21 +37,35 @@ Blocked by #N / none
 Pointers to the relevant docs, pitfalls, and decisions already made.
 ```
 
+## Setup
+
+After `uv sync`, install the git hooks once per clone:
+
+```bash
+uv run pre-commit install
+```
+
+The hooks run ruff and `scripts/check_no_data.py`, which rejects anything under
+`assets/`, `data/` or `runs/`, any PDF, and raster images outside
+`tests/fixtures/` and `docs/img/` (or over 200 KB anywhere). CI runs the same
+check on every tracked file.
+
 ## Workflow
 
-1. **Plan before implementing.** Comment the plan on the issue (or describe it
-   in the PR draft) and get approval before writing code.
-2. **Branch** from `main`: `<issue-number>-<short-slug>`, for example
-   `7-fischer-figurine-mapping`.
-3. **Commit** in small steps with an imperative subject line. Reference the
-   issue (`#7`).
-4. **Verify** locally before opening a PR:
+1. **Plan before implementing.** Plan the milestone and each of its issues,
+   and get approval before writing code.
+2. **Branch** from `main`, one branch per milestone: `m<N>-<short-slug>`, for
+   example `m2-fischer-dataset`.
+3. **Commit** one commit per issue, with an imperative subject line that
+   references the issue (`#7`). Verify before each commit:
    ```bash
    uv run ruff check . && uv run ruff format --check . && uv run pytest
    ```
-5. **Open a PR** with `Closes #N`. Include the evidence: command output, metric
-   numbers, sample-check notes. Do not include copyrighted page content.
-6. **Merge** only with green CI. Delete the branch after merging.
+4. **Open one PR** when the milestone's issues are done. The body has one
+   `Closes #N` line per issue and the evidence for each (command output,
+   metric numbers, sample-check notes). Do not include copyrighted page
+   content.
+5. **Merge** only with green CI. Delete the branch after merging.
 
 ## Rules that are never negotiable
 

@@ -17,6 +17,10 @@ and regenerate the labels when you do.
 
 - UTF-8, `\n` line endings, NFC normalization.
 - A single trailing newline at the end of the page.
+- No blank lines at the start of the page. A page with no text is the empty
+  string (no newline).
+- No variation selectors (U+FE0E, U+FE0F) after a chess glyph: `♔`, never
+  `♔` + U+FE0F (the emoji form).
 
 ## Piece figurines
 
@@ -30,10 +34,12 @@ Books print one figurine style for both colours, so we always use the **outline
 | Rook   | ♖     | U+2656     |
 | Bishop | ♗     | U+2657     |
 | Knight | ♘     | U+2658     |
+| Pawn   | ♙     | U+2659 (prose only) |
 
-- Pawns have no figurine in move text (`e4`, `exd5`).
-- The filled glyphs U+265A–U+265F must never appear in output.
-  Post-processing maps them to the outline glyphs.
+- Pawns have no figurine in move text (`e4`, `exd5`). The pawn glyph ♙ is
+  used only where the page prints a pawn figurine in prose.
+- The filled glyphs U+265A–U+265F (♚♛♜♝♞♟) must never appear in output.
+  Post-processing maps each one to its outline glyph (♚→♔, …, ♟→♙).
 - Do not add a space between the figurine and the square: `♘f3`, `♗xf7+`.
 - If a figurine appears in prose ("the ♗ pair"), output the glyph exactly as
   printed.
@@ -97,12 +103,32 @@ also be added to this table in the same PR.
 - Converting diagrams to FEN is post-v1 work (see the backlog milestone). When
   that happens, the token will become `[DIAGRAM fen="..."]`.
 
+## Text normalization
+
+Post-processing (`chess_ocr.text.normalize`) applies exactly these rules, in
+this order. They depend on the text alone and never change chess content.
+Layout rules (reading order, de-hyphenation, dropping headers) are not part of
+it; they belong to label extraction.
+
+1. NFC normalization (not NFKC, which would turn `…` into `...`).
+2. `\r\n` and `\r` become `\n`.
+3. Filled figurines U+265A–U+265F become outline figurines U+2654–U+2659.
+4. Variation selectors U+FE0E / U+FE0F directly after a figurine are removed.
+5. Trailing whitespace is removed from every line.
+6. Blank lines at the start and end of the page are removed, and runs of blank
+   lines become exactly one blank line.
+7. A non-empty page ends with exactly one `\n`. An empty page is `""`.
+
+Everything else is left as is. For example, `+-` is not turned into `+−`,
+`...` is not turned into `…`, and `0-0` is not turned into `O-O`.
+
 ## Example
 
-Source: *My 60 Memorable Games*, page 150 (top):
+Synthetic (invented for this spec, not taken from a book):
 
 ```
-On 5…h5 6 ♗c4 ♖h7 7 d4 d6 8 ♘d3 f3 9 gxf3 ♗e7 10 ♗e3 ♗xh4+ 11 ♔d2 ♗g5 12 f4 ♗h6 13 ♘c3 White has more than enough compensation for the Pawn. This is vintage analysis.
+Instead 11…♘d7 12 ♕d2 ♘f8 13 ♖ad1 leaves the knight badly placed ⩲. The ♗ pair will tell in the long run.
 
-6 d4 …
+11 … ♗d7
+12 ♗e3 ♖e8
 ```

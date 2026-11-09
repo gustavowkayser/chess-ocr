@@ -1,5 +1,7 @@
 # chess-ocr
 
+[![CI](https://github.com/gustavowkayser/chess-ocr/actions/workflows/ci.yml/badge.svg)](https://github.com/gustavowkayser/chess-ocr/actions/workflows/ci.yml)
+
 OCR for chess books that reads **piece figurines** correctly.
 
 Chess books write moves with figurines (`♘f3`, `♗xf7+`) and evaluation symbols
@@ -52,13 +54,30 @@ toward **v1.0.0**:
 - 24 GB RAM recommended.
 - Python 3.12 and [uv](https://docs.astral.sh/uv/).
 
+## Setup
+
+```bash
+uv sync                  # Python 3.12 + dev tools + the CUDA stack (torch, bitsandbytes, ...)
+uv run chess-ocr env     # check CUDA, bf16, sm_120 kernels and a 4-bit (NF4) matmul
+```
+
+`uv sync` installs the `gpu` dependency group by default. Torch comes from the
+PyTorch CUDA 13.2 index (`cu132`), which needs an NVIDIA driver that supports
+CUDA 13.2. Blackwell GPUs need CUDA 12.8 or newer. On a machine without a GPU,
+use `uv sync --no-group gpu`.
+
+GPU tests are skipped by default. Run them with:
+
+```bash
+uv run pytest --run-gpu -m gpu
+```
+
 ## Quickstart
 
-> Not implemented yet. This section is filled in by M1 (setup) and M6 (CLI).
+> Not implemented yet. This section is filled in by M6 (CLI).
 > The planned interface:
 
 ```bash
-uv sync
 uv run chess-ocr ocr page.png
 uv run chess-ocr ocr book.pdf --pages 10-20 --out out/
 ```
