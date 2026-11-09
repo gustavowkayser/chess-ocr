@@ -1,0 +1,44 @@
+[project]
+name = "chess-ocr"
+version = "0.1.0"
+description = "Page-level OCR for chess books with real Unicode figurines, fine-tuned with QLoRA."
+readme = "README.md"
+requires-python = "==3.12.*"
+authors = [{ name = "Gustavo Kayser" }]
+dependencies = []
+
+[project.scripts]
+chess-ocr = "chess_ocr.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["uv_build>=0.10,<0.11"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers"]
+markers = [
+    "gpu: needs a CUDA GPU; skipped unless --run-gpu is passed",
+]
