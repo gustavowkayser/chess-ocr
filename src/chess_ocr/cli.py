@@ -6,8 +6,9 @@ import argparse
 import sys
 from collections.abc import Sequence
 
-from chess_ocr import __version__
+from chess_ocr import __version__, env
 
+# Subcommands that are still stubs.
 SUBCOMMANDS: dict[str, str] = {
     "ocr": "Run OCR on page images or PDF pages.",
     "eval": "Evaluate a backend on a labelled dataset.",
@@ -31,6 +32,8 @@ def build_parser() -> argparse.ArgumentParser:
     for name, help_text in SUBCOMMANDS.items():
         sub = subparsers.add_parser(name, help=help_text, description=help_text)
         sub.set_defaults(func=_not_implemented)
+    env_help = "Check the CUDA / bitsandbytes environment."
+    subparsers.add_parser("env", help=env_help, description=env_help).set_defaults(func=env.run)
     return parser
 
 
