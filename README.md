@@ -1,5 +1,7 @@
 # chess-ocr
 
+[![CI](https://github.com/gustavowkayser/chess-ocr/actions/workflows/ci.yml/badge.svg)](https://github.com/gustavowkayser/chess-ocr/actions/workflows/ci.yml)
+
 OCR for chess books that reads **piece figurines** correctly.
 
 Chess books write moves with figurines (`♘f3`, `♗xf7+`) and evaluation symbols
